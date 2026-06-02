@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  resources :billing_methods
+  resources :insurance_providers
+  resources :cities
+  resources :states
+  resources :countries
+  resources :clinics
   resources :patients
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

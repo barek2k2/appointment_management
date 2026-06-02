@@ -1,0 +1,2 @@
+class InsuranceProvider < ApplicationRecord
+end

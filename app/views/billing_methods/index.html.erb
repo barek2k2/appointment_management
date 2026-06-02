@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Billing methods</h1>
+
+<div id="billing_methods">
+  <% @billing_methods.each do |billing_method| %>
+    <%= render billing_method %>
+    <p>
+      <%= link_to "Show this billing method", billing_method %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New billing method", new_billing_method_path %>

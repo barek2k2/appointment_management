@@ -1,0 +1,2 @@
+class BillingMethod < ApplicationRecord
+end
