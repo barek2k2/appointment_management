@@ -1,7 +1,7 @@
 class PatientsController < ApplicationController
-  def search
-    name = params[:name]
-
-    @patients = Patient.where("name = ?", name)
+    def search
+    @patients = Patient.where(
+      "name = '#{params[:name]}'"
+    )
   end
 end
