@@ -9,9 +9,9 @@ jobs:
   compliance-check:
     runs-on: ubuntu-latest
     steps:
-      # Pinned to @main (has source-upload + verdict enforcement). For a real
+      # Pinned to @v1.2 (has source-upload + verdict enforcement). For a real
       # rollout this would be a tag (e.g. @v1.2) once Emadur cuts it.
-      - uses: HIPAACKR/pr-compliance-check@main
+      - uses: HIPAACKR/pr-compliance-check@v1.2
         with:
           api-key: ${{ secrets.COMPLIANCE_API_KEY }}
           frameworks: '["hipaa"]'
