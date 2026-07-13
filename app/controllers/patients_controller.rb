@@ -1,9 +1,10 @@
 class PatientsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_patient, only: %i[ show edit update destroy ]
 
   # GET /patients or /patients.json
   def index
-    @patients = Patient.all
+    @patients = current_user.patients
   end
 
   # GET /patients/1 or /patients/1.json
@@ -12,7 +13,7 @@ class PatientsController < ApplicationController
 
   # GET /patients/new
   def new
-    @patient = Patient.new
+    @patient = current_user.patients.new
   end
 
   # GET /patients/1/edit
@@ -21,7 +22,7 @@ class PatientsController < ApplicationController
 
   # POST /patients or /patients.json
   def create
-    @patient = Patient.new(patient_params)
+    @patient = current_user.patients.new(patient_params)
 
     respond_to do |format|
       if @patient.save
@@ -60,7 +61,7 @@ class PatientsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_patient
-      @patient = Patient.find(params[:id])
+      @patient = current_user.patients.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
