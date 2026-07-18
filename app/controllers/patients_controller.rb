@@ -9,6 +9,7 @@ class PatientsController < ApplicationController
 
   # GET /patients/1 or /patients/1.json
   def show
+    AccessLog.create!(user: current_user, patient: @patient, action: "view", accessed_at: Time.current)
   end
 
   # GET /patients/new
@@ -18,6 +19,7 @@ class PatientsController < ApplicationController
 
   # GET /patients/1/edit
   def edit
+    AccessLog.create!(user: current_user, patient: @patient, action: "edit", accessed_at: Time.current)
   end
 
   # POST /patients or /patients.json

@@ -1,6 +1,6 @@
 class Patient < ApplicationRecord
-  audited except: %i[ssn dob]
-  encrypts :ssn
+  audited
+  encrypts :ssn, :dob
 
   def masked_ssn
     return if ssn.blank?
