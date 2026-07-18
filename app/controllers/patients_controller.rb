@@ -27,10 +27,10 @@ class PatientsController < ApplicationController
     respond_to do |format|
       if @patient.save
         format.html { redirect_to @patient, notice: "Patient was successfully created." }
-        format.json { render :show, status: :created, location: @patient }
+        format.json { render :show, status: :created }
       else
         format.html { render :new, status: :unprocessable_content }
-        format.json { render json: @patient.errors, status: :unprocessable_content }
+        format.json { render json: ["Please check errors"], status: :unprocessable_content }
       end
     end
   end
@@ -40,10 +40,10 @@ class PatientsController < ApplicationController
     respond_to do |format|
       if @patient.update(patient_params)
         format.html { redirect_to @patient, notice: "Patient was successfully updated.", status: :see_other }
-        format.json { render :show, status: :ok, location: @patient }
+        format.json { render :show, status: :ok }
       else
         format.html { render :edit, status: :unprocessable_content }
-        format.json { render json: @patient.errors, status: :unprocessable_content }
+        format.json { render json: ["Please check errors"], status: :unprocessable_content }
       end
     end
   end
