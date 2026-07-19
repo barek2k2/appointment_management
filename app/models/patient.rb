@@ -1,5 +1,5 @@
 class Patient < ApplicationRecord
-  audited
+  audited except: [:ssn, :dob]
   encrypts :ssn, :dob
 
   def masked_ssn
