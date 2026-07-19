@@ -2,28 +2,25 @@ class PatientsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_patient, only: %i[ show edit update destroy ]
 
-  # GET /patients or /patients.json
   def index
     @patients = current_user.patients
   end
 
-  # GET /patients/1 or /patients/1.json
   def show
     AccessLog.create!(user: current_user, patient: @patient, action: "view", accessed_at: Time.current)
   end
 
-  # GET /patients/new
   def new
+    AccessLog.create!(user: current_user, patient: @patient, action: "new", accessed_at: Time.current)
     @patient = current_user.patients.new
   end
 
-  # GET /patients/1/edit
   def edit
     AccessLog.create!(user: current_user, patient: @patient, action: "edit", accessed_at: Time.current)
   end
 
-  # POST /patients or /patients.json
   def create
+    AccessLog.create!(user: current_user, patient: @patient, action: "create", accessed_at: Time.current)
     @patient = current_user.patients.new(patient_params)
 
     respond_to do |format|
@@ -37,8 +34,9 @@ class PatientsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /patients/1 or /patients/1.json
   def update
+    AccessLog.create!(user: current_user, patient: @patient, action: "update", accessed_at: Time.current)
+
     respond_to do |format|
       if @patient.update(patient_params)
         format.html { redirect_to @patient, notice: "Patient was successfully updated.", status: :see_other }
@@ -50,8 +48,9 @@ class PatientsController < ApplicationController
     end
   end
 
-  # DELETE /patients/1 or /patients/1.json
   def destroy
+    AccessLog.create!(user: current_user, patient: @patient, action: "destroy", accessed_at: Time.current)
+
     @patient.destroy!
 
     respond_to do |format|
@@ -61,12 +60,10 @@ class PatientsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_patient
       @patient = current_user.patients.find(params[:id])
     end
 
-    # Only allow a list of trusted parameters through.
     def patient_params
       params.require(:patient).permit(:name, :ssn, :dob)
     end
