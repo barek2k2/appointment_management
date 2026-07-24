@@ -1,6 +1,7 @@
 class PatientsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_patient, only: %i[ show edit update destroy ]
+  before_action :log_audit
 
   def index
     @patients = current_user.patients
@@ -22,10 +23,10 @@ class PatientsController < ApplicationController
     respond_to do |format|
       if @patient.save
         format.html { redirect_to @patient, notice: "Patient was successfully created." }
-        format.json { render :show, status: :created, location: @patient }
+        format.json { render :show, status: :created }
       else
         format.html { render :new, status: :unprocessable_content }
-        format.json { render json: @patient.errors, status: :unprocessable_content }
+        format.json { render json: ["There are some errors"], status: :unprocessable_content }
       end
     end
   end
@@ -34,10 +35,10 @@ class PatientsController < ApplicationController
     respond_to do |format|
       if @patient.update(patient_params)
         format.html { redirect_to @patient, notice: "Patient was successfully updated.", status: :see_other }
-        format.json { render :show, status: :ok, location: @patient }
+        format.json { render :show, status: :ok }
       else
         format.html { render :edit, status: :unprocessable_content }
-        format.json { render json: @patient.errors, status: :unprocessable_content }
+        format.json { render json: ["There are some errors"], status: :unprocessable_content }
       end
     end
   end
@@ -59,4 +60,19 @@ class PatientsController < ApplicationController
     def patient_params
       params.require(:patient).permit(:first_name, :ssn, :soccer_team_name)
     end
+
+  def log_audit
+    record = @patient || @patients
+
+    Audited::Audit.create!(
+      auditable_type: "Patient",
+      auditable_id: record.try(:id),
+      action: params[:action],
+      user: current_user,
+      comment: "#{params[:action]} performed via PatientsController",
+      audited_changes: record.try(:previous_changes).presence || {},
+      remote_address: request.remote_ip,
+      request_uuid: request.uuid
+    )
+  end
 end
