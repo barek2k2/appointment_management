@@ -1,7 +1,7 @@
 class PatientsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_patient, only: %i[ show edit update destroy ]
-  before_action :log_audit
+  before_action :audit_patient
 
   def index
     @patients = current_user.patients
@@ -61,7 +61,7 @@ class PatientsController < ApplicationController
       params.require(:patient).permit(:first_name, :ssn, :soccer_team_name)
     end
 
-  def log_audit
+  def audit_patient
     record = @patient || @patients
 
     Audited::Audit.create!(
@@ -70,9 +70,15 @@ class PatientsController < ApplicationController
       action: params[:action],
       user: current_user,
       comment: "#{params[:action]} performed via PatientsController",
-      audited_changes: record.try(:previous_changes).presence || {},
+      audited_changes: filtered_changes(record),
       remote_address: request.remote_ip,
       request_uuid: request.uuid
     )
+  end
+  def filtered_changes(record)
+    return {} unless record
+
+    excluded = %w[ssn]
+    record.try(:previous_changes).to_h.except(*excluded)
   end
 end
