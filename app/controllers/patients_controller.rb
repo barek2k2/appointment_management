@@ -2,7 +2,7 @@ class PatientsController < ApplicationController
     before_action :authenticate_user!
 
     def search
-    @patients = Patient.where(
+    @patients = current_user.patients.where(
       "name = '#{params[:name]}'"
     )
   end
