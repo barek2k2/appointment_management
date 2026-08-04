@@ -1,5 +1,7 @@
 class CountriesController < ApplicationController
   before_action :set_country, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!
+  before_action :check_is_admin
 
   # GET /countries or /countries.json
   def index
@@ -67,4 +69,7 @@ class CountriesController < ApplicationController
     def country_params
       params.require(:country).permit(:name)
     end
+  def check_is_admin
+    current_user.admin?
+  end
 end
