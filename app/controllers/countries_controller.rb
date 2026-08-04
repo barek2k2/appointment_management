@@ -70,6 +70,8 @@ class CountriesController < ApplicationController
       params.require(:country).permit(:name)
     end
   def check_is_admin
-    current_user.admin?
+    unless current_user.admin?
+      redirect_to root_url, alert: "You are not authorized to access this section of the webpage."
+    end
   end
 end
